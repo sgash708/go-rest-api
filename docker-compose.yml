@@ -3,11 +3,15 @@ version: '3'
 services:
   golang:
     container_name: golang
-    build: ./docker/golang
-    volumes:
-      - ./:/var/www/html
+    build:
+      context: ./
+      dockerfile: ./docker/golang/Dockerfile
+    # volumes:
+    #   - ./:/build
     ports:
-      - 8899:8080
+      - 8080:8080
+    tty: true
+    stdin_open: true
     depends_on:
       - go-rest-api-db
 
