@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  golang:
+    container_name: golang
+    build: ./docker/golang
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - 8899:8080
+    depends_on:
+      - go-rest-api-db
+
+  go-rest-api-db:
+    image: mysql:5.7
+    container_name: go-rest-api-db
+    environment:
+      MYSQL_ROOT_PASSWORD: golang-root-pass
+      MYSQL_DATABASE: golang-db
+      MYSQL_USER: go-user
+      MYSQL_PASSWORD: go-pass
+      TZ: Asia/Tokyo
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/sql:/docker-entrypoint-initdb.d
+    ports:
+      - 3311:3306
